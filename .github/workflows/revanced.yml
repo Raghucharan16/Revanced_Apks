@@ -20,9 +20,9 @@ jobs:
       - name: Get last tag
         id: last_tag
         uses: oprypin/find-latest-tag@v1
-        continue-on-error: true  # Continue if no tags or releases are found
+        continue-on-error: true
         with:
-          token: ${{ secrets.REVANCED_TOKEN }}
+          token: ${{ secrets.GITHUB_TOKEN }}
           repository: ${{ github.repository }}
           releases-only: true
 
@@ -40,14 +40,13 @@ jobs:
       - name: Build APK
         run: |
           git pull
-          chmod 777 build.sh  # Ensure script has execute permission
-          ls -la  # List the directory and check if build.sh has the correct permissions
-          ./build.sh config.toml
+          chmod +x build.sh  # Ensure execute permission
+          ls -la  # Verify permissions
+          ./build.sh config.toml  # Run the build script
         env:
-          GITHUB_TOKEN: ${{ secrets.REVANCED_TOKEN }}
-          GITHUB_REPOSITORY: $GITHUB_REPOSITORY
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use default GitHub token
+          GITHUB_REPOSITORY: ${{ github.repository }}
           NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
-
 
       - name: Get output
         id: get_output
@@ -62,13 +61,12 @@ jobs:
             echo "RELEASE_NAME=YouTube ReVanced" >> $GITHUB_OUTPUT
           else
             echo "RELEASE_NAME= YouTube:v$yt_v Music:v$ytm_v" >> $GITHUB_OUTPUT
-          fi
 
       - name: Upload to release
         uses: svenstaro/upload-release-action@v2
         with:
           body: ${{ steps.get_output.outputs.BUILD_LOG }}
-          repo_token: ${{ secrets.REVANCED_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub's token
           file: ./build/*
           release_name: ${{ steps.get_output.outputs.RELEASE_NAME }}
           tag: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
