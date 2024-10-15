@@ -1,0 +1,93 @@
+name: Build ReVanced
+on: workflow_dispatch
+
+jobs:
+  run:
+    permissions: write-all
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/setup-java@v4
+        with:
+          distribution: "zulu"
+          java-version: "17"
+
+      - name: Checkout
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: true
+
+      - name: Get last tag
+        id: last_tag
+        uses: oprypin/find-latest-tag@v1
+        continue-on-error: true
+        with:
+          token: ${{ secrets.TOKEN }}
+          repository: ${{ github.repository }}
+          releases-only: true
+
+      - name: Get next version code
+        id: next_ver_code
+        run: |
+          TAG="${{ steps.last_tag.outputs.tag }}"
+          if [ -z "$TAG" ]; then TAG=0; fi
+          echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
+
+      - name: Build APK
+        run: git pull && ./build.sh config.toml
+        env:
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_REPOSITORY: $GITHUB_REPOSITORY
+          NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
+
+      - name: Get output
+        id: get_output
+        run: |
+          DELIM="$(openssl rand -hex 8)"
+          echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
+          cat build.md >> "$GITHUB_OUTPUT"
+          echo "${DELIM}" >> "$GITHUB_OUTPUT"
+          yt_v=$(cat $GITHUB_OUTPUT | grep "YouTube-Extended:" | head -n 1 | cut -d " " -f 2)
+          ytm_v=$(cat $GITHUB_OUTPUT | grep "Music-Extended:" | head -n 1 | cut -d " " -f 2)
+          if [ -z "$yt_v" ]; then
+            echo "RELEASE_NAME=YouTube ReVanced" >> $GITHUB_OUTPUT
+          else
+            echo "RELEASE_NAME= YouTube:v$yt_v Music:v$ytm_v" >> $GITHUB_OUTPUT
+          fi
+
+      - name: Upload to release
+        uses: svenstaro/upload-release-action@v2
+        with:
+          body: ${{ steps.get_output.outputs.BUILD_LOG }}
+          repo_token: ${{ secrets.TOKEN }}
+          file: ./build/*
+          release_name: ${{ steps.get_output.outputs.RELEASE_NAME }}
+          tag: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
+          file_glob: true
+          overwrite: true
+
+  deploy:
+    needs: run  # This job runs after the APK build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout gh-pages branch
+        uses: actions/checkout@v4
+        with:
+          ref: gh-pages
+
+      - name: Copy APK to gh-pages
+        run: |
+          mkdir -p releases
+          cp ./build/*.apk ./releases/
+          # Updating script.js to reflect new APK names
+          yt_apk=$(ls ./releases/ | grep 'YouTube' | head -n 1)
+          ytm_apk=$(ls ./releases/ | grep 'Music' | head -n 1)
+          sed -i "s/'YouTube-ReVanced-v1.apk'/'$yt_apk'/g" script.js
+          sed -i "s/'YouTube-Music-ReVanced-v1.apk'/'$ytm_apk'/g" script.js
+
+      - name: Commit and push updates
+        run: |
+          git add releases/
+          git add script.js
+          git commit -m "Update APKs for version v${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}"
+          git push origin gh-pages
