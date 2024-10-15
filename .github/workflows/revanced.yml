@@ -1,4 +1,5 @@
 name: Build ReVanced
+
 on: workflow_dispatch
 
 jobs:
@@ -37,11 +38,12 @@ jobs:
           if [ -z "$TAG" ]; then TAG=0; fi
           echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
 
+      - name: Set execute permission for build script
+        run: chmod +x build.sh
+
       - name: Build APK
         run: |
           git pull
-          chmod +x build.sh  # Ensure execute permission
-          ls -la  # Verify permissions
           ./build.sh config.toml  # Run the build script
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use default GitHub token
@@ -61,6 +63,7 @@ jobs:
             echo "RELEASE_NAME=YouTube ReVanced" >> $GITHUB_OUTPUT
           else
             echo "RELEASE_NAME= YouTube:v$yt_v Music:v$ytm_v" >> $GITHUB_OUTPUT
+          fi
 
       - name: Upload to release
         uses: svenstaro/upload-release-action@v2
