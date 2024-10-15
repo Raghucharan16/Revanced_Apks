@@ -20,11 +20,15 @@ jobs:
       - name: Get last tag
         id: last_tag
         uses: oprypin/find-latest-tag@v1
-        continue-on-error: true
+        continue-on-error: true  # Continue if no tags or releases are found
         with:
           token: ${{ secrets.REVANCED_TOKEN }}
           repository: ${{ github.repository }}
           releases-only: true
+
+      - name: Set default tag if none exists
+        if: steps.last_tag.outputs.tag == ''
+        run: echo "::set-output name=NEXT_VER_CODE::1"  # Default to 1 if no tag is found
 
       - name: Get next version code
         id: next_ver_code
@@ -36,12 +40,14 @@ jobs:
       - name: Build APK
         run: |
           git pull
-          chmod +x build.sh  # Add execute permission
+          chmod 777 build.sh  # Ensure script has execute permission
+          ls -la  # List the directory and check if build.sh has the correct permissions
           ./build.sh config.toml
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REVANCED_TOKEN }}
           GITHUB_REPOSITORY: $GITHUB_REPOSITORY
           NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
+
 
       - name: Get output
         id: get_output
