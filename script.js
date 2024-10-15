@@ -3,8 +3,8 @@ document.addEventListener('DOMContentLoaded', function () {
 
     // List of APK files (will be automatically updated by the workflow)
     const apks = [
-        'YouTube-ReVanced-v1.apk',
-        'YouTube-Music-ReVanced-v1.apk'
+        '',
+        ''
     ];
 
     // Dynamically create download links
