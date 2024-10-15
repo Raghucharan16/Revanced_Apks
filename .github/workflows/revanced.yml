@@ -22,7 +22,7 @@ jobs:
         uses: oprypin/find-latest-tag@v1
         continue-on-error: true
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.REVANCED_TOKEN }}
           repository: ${{ github.repository }}
           releases-only: true
 
@@ -44,7 +44,7 @@ jobs:
           ls -la  # Verify permissions
           ./build.sh config.toml  # Run the build script
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use default GitHub token
+          GITHUB_TOKEN: ${{ secrets.REVANCED_TOKEN }}  # Use default GitHub token
           GITHUB_REPOSITORY: ${{ github.repository }}
           NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
 
@@ -66,7 +66,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           body: ${{ steps.get_output.outputs.BUILD_LOG }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub's token
+          repo_token: ${{ secrets.REVANCED_TOKEN }}  # Use GitHub's token
           file: ./build/*
           release_name: ${{ steps.get_output.outputs.RELEASE_NAME }}
           tag: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
