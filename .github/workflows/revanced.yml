@@ -22,7 +22,7 @@ jobs:
         uses: oprypin/find-latest-tag@v1
         continue-on-error: true
         with:
-          token: ${{ secrets.TOKEN }}
+          token: ${{ secrets.REVANCED_TOKEN }}
           repository: ${{ github.repository }}
           releases-only: true
 
@@ -36,7 +36,7 @@ jobs:
       - name: Build APK
         run: git pull && ./build.sh config.toml
         env:
-          GITHUB_TOKEN: ${{ secrets.TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.REVANCED_TOKEN }}
           GITHUB_REPOSITORY: $GITHUB_REPOSITORY
           NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
 
@@ -59,7 +59,7 @@ jobs:
         uses: svenstaro/upload-release-action@v2
         with:
           body: ${{ steps.get_output.outputs.BUILD_LOG }}
-          repo_token: ${{ secrets.TOKEN }}
+          repo_token: ${{ secrets.REVANCED_TOKEN }}
           file: ./build/*
           release_name: ${{ steps.get_output.outputs.RELEASE_NAME }}
           tag: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}

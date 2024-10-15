@@ -3,7 +3,7 @@
 TEMP_DIR="temp"
 BUILD_DIR="build"
 
-if [ "${GITHUB_TOKEN:-}" ]; then GH_HEADER="Authorization: token ${GITHUB_TOKEN}"; else GH_HEADER=; fi
+if [ "${REVANCED_TOKEN:-}" ]; then GH_HEADER="Authorization: token ${REVANCED_TOKEN}"; else GH_HEADER=; fi
 NEXT_VER_CODE=${NEXT_VER_CODE:-$(date +'%Y%m%d')}
 REBUILD=${REBUILD:-false}
 OS=$(uname -o)
