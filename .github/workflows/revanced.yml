@@ -29,7 +29,7 @@ jobs:
 
       - name: Set default tag if none exists
         if: steps.last_tag.outputs.tag == ''
-        run: echo "::set-output name=NEXT_VER_CODE::1"  # Default to 1 if no tag is found
+        run: echo "NEXT_VER_CODE=1" >> $GITHUB_OUTPUT
 
       - name: Get next version code
         id: next_ver_code
@@ -44,9 +44,9 @@ jobs:
       - name: Build APK
         run: |
           git pull
-          ./build.sh config.toml  # Run the build script
+          ./build.sh config.toml
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}  # Use default GitHub token
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           GITHUB_REPOSITORY: ${{ github.repository }}
           NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
 
@@ -57,27 +57,33 @@ jobs:
           echo "BUILD_LOG<<${DELIM}" >> "$GITHUB_OUTPUT"
           cat build.md >> "$GITHUB_OUTPUT"
           echo "${DELIM}" >> "$GITHUB_OUTPUT"
-          yt_v=$(cat $GITHUB_OUTPUT | grep "YouTube-Extended:" | head -n 1 | cut -d " " -f 2)
-          ytm_v=$(cat $GITHUB_OUTPUT | grep "Music-Extended:" | head -n 1 | cut -d " " -f 2)
+          yt_v=$(cat build.md | grep "YouTube-Extended:" | head -n 1 | cut -d " " -f 2)
+          ytm_v=$(cat build.md | grep "Music-Extended:" | head -n 1 | cut -d " " -f 2)
           if [ -z "$yt_v" ]; then
             echo "RELEASE_NAME=YouTube ReVanced" >> $GITHUB_OUTPUT
           else
-            echo "RELEASE_NAME= YouTube:v$yt_v Music:v$ytm_v" >> $GITHUB_OUTPUT
+            echo "RELEASE_NAME=YouTube:v$yt_v Music:v$ytm_v" >> $GITHUB_OUTPUT
           fi
 
       - name: Upload to release
         uses: svenstaro/upload-release-action@v2
         with:
           body: ${{ steps.get_output.outputs.BUILD_LOG }}
-          repo_token: ${{ secrets.GITHUB_TOKEN }}  # Use GitHub's token
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./build/*
           release_name: ${{ steps.get_output.outputs.RELEASE_NAME }}
           tag: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
           file_glob: true
           overwrite: true
 
+      - name: Upload APKs as artifacts
+        uses: actions/upload-artifact@v3
+        with:
+          name: revanced-apks
+          path: ./build/*.apk
+
   deploy:
-    needs: run  # This job runs after the APK build
+    needs: run
     runs-on: ubuntu-latest
     steps:
       - name: Checkout gh-pages branch
@@ -85,11 +91,14 @@ jobs:
         with:
           ref: gh-pages
 
-      - name: Copy APK to gh-pages
+      - name: Download APKs
+        uses: actions/download-artifact@v3
+        with:
+          name: revanced-apks
+          path: ./releases
+
+      - name: Update script.js
         run: |
-          mkdir -p releases
-          cp ./build/*.apk ./releases/
-          # Updating script.js to reflect new APK names
           yt_apk=$(ls ./releases/ | grep 'YouTube' | head -n 1)
           ytm_apk=$(ls ./releases/ | grep 'Music' | head -n 1)
           sed -i "s/'YouTube-ReVanced-v1.apk'/'$yt_apk'/g" script.js
@@ -97,7 +106,9 @@ jobs:
 
       - name: Commit and push updates
         run: |
+          git config --local user.email "action@github.com"
+          git config --local user.name "GitHub Action"
           git add releases/
           git add script.js
-          git commit -m "Update APKs for version v${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}"
+          git commit -m "Update APKs for version v${{ needs.run.outputs.NEXT_VER_CODE }}"
           git push origin gh-pages
