@@ -34,9 +34,12 @@ jobs:
           echo "NEXT_VER_CODE=$((TAG + 1))" >> $GITHUB_OUTPUT
 
       - name: Build APK
-        run: git pull && ./build.sh config.toml
+        run: |
+          git pull
+          chmod +x build.sh  # Add execute permission
+          ./build.sh config.toml
         env:
-          GITHUB_TOKEN: ${{ secrets.REVANCED_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.TOKEN }}
           GITHUB_REPOSITORY: $GITHUB_REPOSITORY
           NEXT_VER_CODE: ${{ steps.next_ver_code.outputs.NEXT_VER_CODE }}
 
