@@ -2,6 +2,13 @@ window.onload = function() {
     // The array containing the APK filenames is defined in the GitHub Action
     var apkContainer = document.getElementById('apk-list');
 
+    // Check if apkList exists
+    if (typeof apkList === 'undefined') {
+        console.error('apkList is undefined!');
+        apkContainer.innerHTML = '<p>Error: No APKs available.</p>';
+        return;
+    }
+
     if (apkList.length === 0) {
         var message = document.createElement('p');
         message.textContent = 'No APKs available for download at the moment.';
