@@ -1,33 +1,73 @@
+/* General Styles */
 body {
     font-family: Arial, sans-serif;
-    background-color: #f4f4f4;
     margin: 0;
     padding: 0;
-}
-
-.container {
-    text-align: center;
-    padding: 50px;
-}
-
-h1 {
+    background-color: #f4f4f4;
     color: #333;
 }
 
-#apk-list {
-    margin-top: 20px;
-}
-
-.apk-link {
-    display: block;
-    margin: 10px auto;
-    padding: 10px 20px;
-    background-color: #007BFF;
+/* Header Styling */
+header {
+    background-color: #4CAF50;
     color: white;
-    text-decoration: none;
-    border-radius: 5px;
+    text-align: center;
+    padding: 20px;
 }
 
-.apk-link:hover {
-    background-color: #0056b3;
+h1 {
+    margin: 0;
+    font-size: 2.5em;
+}
+
+p {
+    margin-top: 10px;
+    font-size: 1.2em;
+}
+
+/* APK Section */
+#apk-section {
+    margin: 20px;
+    padding: 20px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+}
+
+h2 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#apk-list {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+#apk-list a {
+    text-decoration: none;
+    color: #4CAF50;
+    font-weight: bold;
+    margin: 10px 0;
+    padding: 10px 20px;
+    background-color: #e7f7e9;
+    border-radius: 5px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+#apk-list a:hover {
+    background-color: #4CAF50;
+    color: white;
+}
+
+/* Footer */
+footer {
+    text-align: center;
+    padding: 20px;
+    background-color: #4CAF50;
+    color: white;
+    position: fixed;
+    width: 100%;
+    bottom: 0;
 }

@@ -1,18 +1,19 @@
-document.addEventListener('DOMContentLoaded', function () {
-    const apkList = document.getElementById('apk-list');
+window.onload = function() {
+    // The array containing the APK filenames is defined in the GitHub Action
+    var apkContainer = document.getElementById('apk-list');
 
-    // List of APK files (will be automatically updated by the workflow)
-    const apks = [
-        'YouTube-ReVanced-v1.apk',
-        'YouTube-Music-ReVanced-v1.apk'
-    ];
-
-    // Dynamically create download links
-    apks.forEach(apk => {
-        const apkLink = document.createElement('a');
-        apkLink.href = `releases/${apk}`;
-        apkLink.className = 'apk-link';
-        apkLink.textContent = `Download ${apk}`;
-        apkList.appendChild(apkLink);
-    });
-});
+    if (apkList.length === 0) {
+        var message = document.createElement('p');
+        message.textContent = 'No APKs available for download at the moment.';
+        apkContainer.appendChild(message);
+    } else {
+        apkList.forEach(function(apk) {
+            var link = document.createElement('a');
+            link.href = './releases/' + apk;
+            link.textContent = apk;
+            link.download = apk;
+            apkContainer.appendChild(link);
+            apkContainer.appendChild(document.createElement('br')); // Add line break
+        });
+    }
+};
