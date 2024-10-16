@@ -99,10 +99,10 @@ jobs:
 
       - name: Update script.js
         run: |
-          echo "var apkList = [];" > script.js  # Initialize an empty JS array
+          echo "var apkList = [];" > script.js  # Start by creating an empty array
           for apk in ./releases/*; do
             apk_name=$(basename "$apk")
-            echo "apkList.push('$apk_name');" >> script.js  # Add each APK to the array
+            echo "apkList.push('$apk_name');" >> script.js
           done
 
       - name: Commit and push updates
