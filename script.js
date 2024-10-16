@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 window.onload = function() {
     // The array containing the APK filenames is defined in the GitHub Action
     var apkContainer = document.getElementById('apk-list');
@@ -18,9 +17,3 @@ window.onload = function() {
         });
     }
 };
-=======
-var apkList = [];
-apkList.push('music-revanced-extended-v7.16.53-arm64-v8a.apk');
-apkList.push('youtube-revanced-extended-v19.16.39-all.apk');
-apkList.push('youtube-revanced-v19.16.39-all.apk');
->>>>>>> afd194be3a5b6e47e63d7bc10fa5e91c45dc425b
