@@ -99,10 +99,11 @@ jobs:
 
       - name: Update script.js
         run: |
-          yt_apk=$(ls ./releases/ | grep 'YouTube' | head -n 1)
-          ytm_apk=$(ls ./releases/ | grep 'Music' | head -n 1)
-          sed -i "s/'YouTube-ReVanced-v1.apk'/'$yt_apk'/g" script.js
-          sed -i "s/'YouTube-Music-ReVanced-v1.apk'/'$ytm_apk'/g" script.js
+          echo "var apkList = [];" > script.js  # Initialize an empty JS array
+          for apk in ./releases/*; do
+            apk_name=$(basename "$apk")
+            echo "apkList.push('$apk_name');" >> script.js  # Add each APK to the array
+          done
 
       - name: Commit and push updates
         run: |
