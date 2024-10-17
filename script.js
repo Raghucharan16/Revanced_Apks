@@ -1,26 +1,37 @@
 window.onload = function() {
-    // The array containing the APK filenames is defined in the GitHub Action
-    var apkContainer = document.getElementById('apk-list');
+    const apkListElement = document.getElementById('apk-list');
 
-    // Check if apkList exists
-    if (typeof apkList === 'undefined') {
-        console.error('apkList is undefined!');
-        apkContainer.innerHTML = '<p>Error: No APKs available.</p>';
-        return;
-    }
+    // List of APKs in the releases folder
+    const apks = [
+        'youtube-revanced-v19.16.39.apk',
+        'youtube-revanced-extended-v7.1.apk',
+        'music-revanced-extended-v7.1.apk'
+    ];
 
-    if (apkList.length === 0) {
-        var message = document.createElement('p');
-        message.textContent = 'No APKs available for download at the moment.';
-        apkContainer.appendChild(message);
+    if (apks.length === 0) {
+        const noApkMessage = document.createElement('p');
+        noApkMessage.textContent = 'No APKs available for download at the moment.';
+        noApkMessage.classList.add('text-gray-400', 'text-center');
+        apkListElement.appendChild(noApkMessage);
     } else {
-        apkList.forEach(function(apk) {
-            var link = document.createElement('a');
-            link.href = './releases/' + apk;
-            link.textContent = apk;
-            link.download = apk;
-            apkContainer.appendChild(link);
-            apkContainer.appendChild(document.createElement('br')); // Add line break
+        apks.forEach(apk => {
+            const apkCard = document.createElement('div');
+            apkCard.classList.add('bg-gray-800', 'p-4', 'rounded-lg', 'shadow-lg', 'text-center');
+
+            const apkName = document.createElement('p');
+            apkName.textContent = apk;
+            apkName.classList.add('text-lg', 'font-semibold', 'mb-2');
+
+            const apkLink = document.createElement('a');
+            apkLink.href = './releases/' + apk;
+            apkLink.textContent = 'Download';
+            apkLink.classList.add('bg-indigo-500', 'text-white', 'py-2', 'px-4', 'rounded-lg', 'hover:bg-indigo-600');
+            apkLink.download = apk;
+
+            apkCard.appendChild(apkName);
+            apkCard.appendChild(apkLink);
+
+            apkListElement.appendChild(apkCard);
         });
     }
 };

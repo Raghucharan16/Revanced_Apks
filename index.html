@@ -1,29 +1,36 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ReVanced APK Downloads</title>
-    <title>ReVanced APK Downloads</title>
-    <link rel="stylesheet" href="styles.css">
-</head>
-<body>
-    <header>
-        <h1>ReVanced APK Downloads</h1>
-        <p>Download the latest YouTube and Music ReVanced APKs</p>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ReVanced APK Releases</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+  </head>
+  <body class="bg-gray-900 text-white">
+    <header class="fixed w-full bg-gray-800 p-4 shadow-lg z-50">
+      <div class="container flex justify-between items-center mx-auto">
+        <h1 class="text-lg md:text-2xl font-semibold">ReVanced APK</h1>
+        <input
+          type="text"
+          placeholder="Search apk"
+          class="bg-gray-700 text-gray-200 rounded-lg py-2 px-4 md:w-64 w-48 focus:outline-none focus:ring-2 focus:ring-indigo-400"
+        />
+      </div>
     </header>
 
-    <section id="apk-section">
-        <h2>Available APKs</h2>
-        <div id="apk-list">
-            <!-- APK download links will be added here dynamically -->
-        </div>
-    </section>
+    <main class="pt-20 container mx-auto px-4">
+      <section class="my-6">
+        <h2 class="text-xl md:text-3xl font-semibold mb-4">Latest Releases</h2>
 
-    <footer>
-        <p>&copy; 2024 ReVanced APK Builder</p>
-    </footer>
+        <div
+          id="apk-list"
+          class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6"
+        >
+          <!-- APK links will be dynamically added here by script.js -->
+        </div>
+      </section>
+    </main>
 
     <script src="script.js"></script>
-</body>
+  </body>
 </html>
