@@ -1,62 +1,95 @@
-document.addEventListener("DOMContentLoaded", function () {
-  const apkList = document.getElementById("apk-list");
+window.onload = function () {
+  const apkListElement = document.getElementById("apk-list");
+  const microgListElement = document.getElementById("microg-list");
 
-  // List of APK files
+  // List of ReVanced APKs in the releases folder
   const apks = [
-    "Youtube Premium v2.0.6",
-    "Netflix Mod apk",
-    "Prime Video",
-    "Hotstar Premium Mod",
-    "Prime Video Mod apk",
-    "Filmora Premium",
-    "Adobe X reader hijx sdkfjdsk",
+    "youtube-revanced-v19.16.39.apk",
+    "youtube-revanced-extended-v7.1.apk",
+    "music-revanced-extended-v7.1.apk",
   ];
 
-  apks.forEach((apk) => {
-    const apkBlock = document.createElement("div");
-    apkBlock.className =
-      "bg-gray-800 p-6 rounded-lg flex justify-between items-center shadow-lg hover:bg-gray-700 transition duration-300";
+  // List of microG APK in the releases folder
+  const microgApk = "microG.apk"; // Assuming this is the name of your microG APK
 
-    const apkTitle = document.createElement("h3");
-    apkTitle.className = "text-base md:text-lg font-semibold";
-    apkTitle.textContent = apk;
+  // Populate ReVanced APKs
+  if (apks.length === 0) {
+    const noApkMessage = document.createElement("p");
+    noApkMessage.textContent =
+      "No ReVanced APKs available for download at the moment.";
+    noApkMessage.classList.add("text-gray-400", "text-center");
+    apkListElement.appendChild(noApkMessage);
+  } else {
+    apks.forEach((apk) => {
+      const apkCard = document.createElement("div");
+      apkCard.classList.add(
+        "bg-gray-800",
+        "p-4",
+        "rounded-lg",
+        "shadow-lg",
+        "text-center"
+      );
 
-    const downloadLink = document.createElement("a");
-    downloadLink.href = `releases/${apk}`;
-    downloadLink.className =
-      "bg-indigo-500 p-3 rounded-full hover:bg-indigo-600 transition";
+      const apkName = document.createElement("p");
+      apkName.textContent = apk;
+      apkName.classList.add("text-lg", "font-semibold", "mb-2");
 
-    // Just adding svg
-    const svgIcon = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "svg"
+      const apkLink = document.createElement("a");
+      apkLink.href = "./releases/" + apk;
+      apkLink.textContent = "Download";
+      apkLink.classList.add(
+        "bg-indigo-500",
+        "text-white",
+        "py-2",
+        "px-4",
+        "rounded-lg",
+        "hover:bg-indigo-600"
+      );
+      apkLink.download = apk;
+
+      apkCard.appendChild(apkName);
+      apkCard.appendChild(apkLink);
+
+      apkListElement.appendChild(apkCard);
+    });
+  }
+
+  // Populate microG APK
+  if (!microgApk) {
+    const noMicrogMessage = document.createElement("p");
+    noMicrogMessage.textContent = "microG APK is not available at the moment.";
+    noMicrogMessage.classList.add("text-gray-400", "text-center");
+    microgListElement.appendChild(noMicrogMessage);
+  } else {
+    const microgCard = document.createElement("div");
+    microgCard.classList.add(
+      "bg-gray-800",
+      "p-4",
+      "rounded-lg",
+      "shadow-lg",
+      "text-center"
     );
-    svgIcon.setAttribute("xmlns", "http://www.w3.org/2000/svg");
-    svgIcon.setAttribute("class", "h-6 w-6 text-white");
-    svgIcon.setAttribute("fill", "none");
-    svgIcon.setAttribute("viewBox", "0 0 24 24");
-    svgIcon.setAttribute("stroke", "currentColor");
 
-    const svgPath = document.createElementNS(
-      "http://www.w3.org/2000/svg",
-      "path"
+    const microgName = document.createElement("p");
+    microgName.textContent = microgApk;
+    microgName.classList.add("text-lg", "font-semibold", "mb-2");
+
+    const microgLink = document.createElement("a");
+    microgLink.href = "./releases/" + microgApk;
+    microgLink.textContent = "Download microG";
+    microgLink.classList.add(
+      "bg-green-500",
+      "text-white",
+      "py-2",
+      "px-4",
+      "rounded-lg",
+      "hover:bg-green-600"
     );
-    svgPath.setAttribute("stroke-linecap", "round");
-    svgPath.setAttribute("stroke-linejoin", "round");
-    svgPath.setAttribute("stroke-width", "2");
-    svgPath.setAttribute(
-      "d",
-      "M4 16v2a2 2 0 002 2h12a2 2 0 002-2v-2m-4-4l-4 4m0 0l-4-4m4 4V4"
-    );
+    microgLink.download = microgApk;
 
-    svgIcon.appendChild(svgPath);
-    // svg end
+    microgCard.appendChild(microgName);
+    microgCard.appendChild(microgLink);
 
-    downloadLink.appendChild(svgIcon);
-
-    apkBlock.appendChild(apkTitle);
-    apkBlock.appendChild(downloadLink);
-
-    apkList.appendChild(apkBlock);
-  });
-});
+    microgListElement.appendChild(microgCard);
+  }
+};
