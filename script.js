@@ -27,24 +27,22 @@ window.onload = function () {
         "p-4",
         "rounded-lg",
         "shadow-lg",
-        "text-center"
+        "text-center",
+        "flex",
+        "justify-between"
       );
 
       const apkName = document.createElement("p");
       apkName.textContent = apk;
       apkName.classList.add("text-lg", "font-semibold", "mb-2");
 
+      const img = document.createElement("img");
+      img.src = "./downloadicon.png";
+      img.classList.add("rounded-full", "w-10", "h-10");
+
       const apkLink = document.createElement("a");
       apkLink.href = "./releases/" + apk;
-      apkLink.textContent = "Download";
-      apkLink.classList.add(
-        "bg-indigo-500",
-        "text-white",
-        "py-2",
-        "px-4",
-        "rounded-lg",
-        "hover:bg-indigo-600"
-      );
+      apkLink.append(img);
       apkLink.download = apk;
 
       apkCard.appendChild(apkName);
@@ -67,24 +65,22 @@ window.onload = function () {
       "p-4",
       "rounded-lg",
       "shadow-lg",
-      "text-center"
+      "text-center",
+      "flex",
+      "justify-between"
     );
 
     const microgName = document.createElement("p");
     microgName.textContent = microgApk;
     microgName.classList.add("text-lg", "font-semibold", "mb-2");
 
+    const img = document.createElement("img");
+    img.src = "./downloadicon.png";
+    img.classList.add("rounded-full", "w-10", "h-10");
+
     const microgLink = document.createElement("a");
     microgLink.href = "./releases/" + microgApk;
-    microgLink.textContent = "Download microG";
-    microgLink.classList.add(
-      "bg-green-500",
-      "text-white",
-      "py-2",
-      "px-4",
-      "rounded-lg",
-      "hover:bg-green-600"
-    );
+    microgLink.append(img);
     microgLink.download = microgApk;
 
     microgCard.appendChild(microgName);
